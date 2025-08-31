@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,10 +37,14 @@ public class CustomerController {
   }
 
 
-  @GetMapping()
-  public List<Customer> getAllCustomers() {
-    return customerUseCase.find();
-  }
+    @GetMapping
+    public ResponseEntity<Page<Customer>> getAllCustomers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        
+        Page<Customer> customersPage = customerUseCase.findAll(page, size);
+        return ResponseEntity.ok(customersPage);
+    }
 
   @DeleteMapping()
   public void deleteAllCustomers() {

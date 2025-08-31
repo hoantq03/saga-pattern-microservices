@@ -5,6 +5,8 @@ import com.uuhnaut69.customer.domain.entity.Customer;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface CustomerRepositoryPort {
 
@@ -17,4 +19,7 @@ public interface CustomerRepositoryPort {
   Long countAll();
 
   void removeAll();
+
+  Page<Customer> findAll(Pageable pageable);
+
 }

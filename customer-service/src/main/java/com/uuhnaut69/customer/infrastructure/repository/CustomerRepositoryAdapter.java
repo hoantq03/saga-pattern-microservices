@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Repository
 @RequiredArgsConstructor
@@ -49,5 +51,15 @@ public class CustomerRepositoryAdapter implements CustomerRepositoryPort {
   @Override
   public void removeAll() {
     customerJpaRepository.deleteAll();
+  }
+
+  @Override
+  public Page<Customer> findAll(Pageable pageable) {
+      // 1. Gọi JpaRepository, nó sẽ tự động tạo câu lệnh SQL với LIMIT và OFFSET
+      Page<CustomerEntity> customerEntityPage = customerJpaRepository.findAll(pageable);
+
+      // 2. Chuyển đổi (map) từ Page<CustomerEntity> sang Page<Customer> (domain model)
+      // Spring's Page object có sẵn hàm map rất tiện lợi
+      return customerEntityPage.map(customerEntity -> mapper.convertValue(customerEntity, Customer.class));
   }
 }

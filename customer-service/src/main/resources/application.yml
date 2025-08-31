@@ -14,10 +14,14 @@ spring:
       use-new-id-generator-mappings: true
     generate-ddl: true
   datasource:
-    url: jdbc:postgresql://localhost:5433/postgres
-    username: postgres
-    password: postgres
-  cloud:
+    url: ${SPRING_DATASOURCE_CUSTOMER_DB_URL:jdbc:postgresql://localhost:5433/customerdb} 
+    username: ${SPRING_DATASOURCE_USERNAME_CUSTOMER_DB:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD_CUSTOMER_DB:postgres} # Sẽ được lấy từ Secret
+    hikari:
+      maximum-pool-size: ${SPRING_DATASOURCE_CUSTOMER_DB_MAXIMUM_POOL_SIZE:1000} 
+      minimum-idle: ${SPRING_DATASOURCE_CUSTOMER_DB_MINIMUM_IDLE:50} 
+      connection-timeout: ${SPRING_DATASOURCE_CUSTOMER_DB_CONNECTION_TIMEOUT:20000} # 20 giây
+      max-lifetime: ${SPRING_DATASOURCE_CUSTOMER_DB_MAX_LIFETIME:600000} # 10 phút
     consul:
       host: ${CONSUL_HOST:localhost}
       port: ${CONSUL_PORT:8500}
@@ -26,7 +30,7 @@ spring:
     stream:
       kafka:
         binder:
-          brokers: localhost:9092
+          brokers: ${KAFKA_BROKERS:localhost:9092}
       bindings:
         handleReserveCustomerBalanceRequest-in-0:
           destination: ORDER.events

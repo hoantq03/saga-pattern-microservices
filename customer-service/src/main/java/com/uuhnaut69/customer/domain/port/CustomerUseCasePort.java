@@ -7,6 +7,8 @@ import com.uuhnaut69.customer.domain.entity.Customer;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+
 public interface CustomerUseCasePort {
 
   Customer findById(UUID customerId);
@@ -22,4 +24,7 @@ public interface CustomerUseCasePort {
   Long countAll();
 
   void deleteAll();
+
+  Page<Customer> findAll(int page, int size);
+
 }

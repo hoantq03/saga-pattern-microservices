@@ -2,21 +2,28 @@ global:
   scrape_interval: 15s
 
 scrape_configs:
+  # Job 1: Prometheus tự scrape chính nó
   - job_name: 'prometheus'
     static_configs:
-      - targets: ['localhost:9090']
+      # Sửa 'localhost' thành tên Service của chính Prometheus.
+      # Tên này phải khớp với tên trong file prometheus-service.yaml
+      - targets: ['prometheus-svc:9090']
 
-  - job_name: 'kafka'
+  # Job 2: Scrape Kafka Exporter
+  - job_name: 'kafka-exporter' # Đổi tên job cho rõ ràng
     static_configs:
-      - targets: ['kafka-exporter:9308']
+      # Sử dụng tên Service đầy đủ (bao gồm cả port)
+      - targets: ['kafka-exporter-svc:9308']
 
-  - job_name: 'postgres'
+  # Job 3: Scrape Postgres Exporter
+  - job_name: 'postgres-exporter'
     static_configs:
-      - targets: ['postgres-exporter:9187']
+      - targets: ['postgres-exporter-svc:9187']
 
+  # Job 4: Scrape Consul
   - job_name: 'consul'
     metrics_path: /v1/agent/metrics
     params:
       format: ['prometheus']
     static_configs:
-      - targets: ['consul:8500']
+      - targets: ['consul-svc:8500'] # Sử dụng tên Service của Consul

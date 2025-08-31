@@ -1,0 +1,5 @@
+spring:
+  cloud:
+    consul:
+      host: ${CONSUL_HOST:consul-svc}
+      port: ${CONSUL_PORT:8500}

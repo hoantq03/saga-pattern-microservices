@@ -9,8 +9,12 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 @Transactional
@@ -76,4 +80,14 @@ public class CustomerUseCase implements CustomerUseCasePort {
   public List<Customer> find() {
     return customerRepository.find();
   }
+
+  @Override
+    public Page<Customer> findAll(int page, int size) {
+        // Tạo một đối tượng Pageable từ thông tin trang và kích thước
+        Pageable pageable = PageRequest.of(page, size);
+        
+        // Gọi đến port để lấy dữ liệu. Lớp UseCase không cần biết việc
+        // phân trang được thực hiện bằng JpaRepository hay một công nghệ nào khác.
+        return customerRepository.findAll(pageable);
+    }
 }

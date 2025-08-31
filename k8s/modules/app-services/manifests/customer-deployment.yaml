@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customer-service-deployment
+  labels:
+    app: customer-service
+spec:
+  # replicas: 1 # Bắt đầu với 1 pod, có thể tăng sau
+  selector:
+    matchLabels:
+      app: customer-service
+  template:
+    metadata:
+      labels:
+        app: customer-service
+    spec:
+      containers:
+        - name: customer-service
+          # THAY THẾ BẰNG TÊN IMAGE CỦA BẠN
+          image: hoantq03/customer-service:1.2
+          imagePullPolicy: IfNotPresent # Quan trọng khi dùng image local
+          ports:
+            - containerPort: 9091 # Cổng mà ứng dụng expose
+          
+          # Lấy tất cả các key-value từ ConfigMap 'app-config' 
+          # và inject chúng vào container dưới dạng biến môi trường
+          envFrom:
+            - configMapRef:
+                name: app-config
+          env:
+            - name: SPRING_DATASOURCE_PASSWORD_CUSTOMER_DB
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret      # Tên Secret được tạo bởi Terraform
+                  key: POSTGRES_PASSWORD     # Key bên trong Secret
+                  
+          # Khai báo tài nguyên là một best practice để K8s xếp lịch pod hiệu quả
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "1" # Giới hạn 1 core CPU

@@ -1,0 +1,1 @@
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"app_services","Source":"./modules/app-services","Dir":"modules/app-services"},{"Key":"databases","Source":"./modules/databases","Dir":"modules/databases"},{"Key":"messaging","Source":"./modules/messaging","Dir":"modules/messaging"}]}

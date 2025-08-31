@@ -3,8 +3,12 @@ package com.uuhnaut69.customer.infrastructure.repository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uuhnaut69.customer.domain.entity.Customer;
 import com.uuhnaut69.customer.domain.port.CustomerRepositoryPort;
+
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -27,5 +31,23 @@ public class CustomerRepositoryAdapter implements CustomerRepositoryPort {
     var entity = mapper.convertValue(customer, CustomerEntity.class);
     customerJpaRepository.save(entity);
     return customer;
+  }
+
+  @Override
+  public List<Customer> find() {
+    return customerJpaRepository.findAll()
+            .stream()
+            .map(customerEntity -> mapper.convertValue(customerEntity, Customer.class))
+            .collect(Collectors.toList());
+  }
+
+  @Override
+  public Long countAll() {
+    return customerJpaRepository.count();
+  }
+
+  @Override
+  public void removeAll() {
+    customerJpaRepository.deleteAll();
   }
 }

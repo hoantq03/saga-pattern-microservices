@@ -6,6 +6,7 @@ import com.uuhnaut69.customer.domain.exception.NotFoundException;
 import com.uuhnaut69.customer.domain.port.CustomerRepositoryPort;
 import com.uuhnaut69.customer.domain.port.CustomerUseCasePort;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -58,5 +59,21 @@ public class CustomerUseCase implements CustomerUseCasePort {
             .getBalance()
             .add(orderEvent.price().multiply(BigDecimal.valueOf(orderEvent.quantity()))));
     customerRepository.saveCustomer(customer);
+  }
+
+  @Override
+  public Long countAll() {
+    return customerRepository.countAll();
+  }
+
+  @Override
+  public void deleteAll() {
+      customerRepository.removeAll();
+  }
+
+
+  @Override
+  public List<Customer> find() {
+    return customerRepository.find();
   }
 }

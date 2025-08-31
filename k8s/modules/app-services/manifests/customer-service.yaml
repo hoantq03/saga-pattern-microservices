@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: customer-service # Tên này sẽ trở thành DNS name: http://customer-service:9091
+  labels:
+    app: customer-service
+spec:
+  type: ClusterIP # Chỉ có thể truy cập từ bên trong cluster
+  selector:
+    app: customer-service # Trỏ đến các pod có label này
+  ports:
+    - protocol: TCP
+      port: 9091 # Cổng mà các service khác sẽ gọi đến
+      targetPort: 9091 # Cổng của container (phải khớp containerPort trong Deployment)
